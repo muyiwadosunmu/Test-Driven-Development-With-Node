@@ -1,0 +1,10 @@
+[
+	{
+		"language": "en-uk",
+		"flag": "http://www.geognos.com/api/en/countries/flag/NG.png"
+	},
+	{
+		"language": "tr",
+		"flag": "http://www.geognos.com/api/en/countries/flag/TR.png"
+	}
+]
