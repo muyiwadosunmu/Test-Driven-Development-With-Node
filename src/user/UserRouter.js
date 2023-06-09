@@ -1,9 +1,10 @@
 const express = require("express");
+const { check, validationResult } = require("express-validator");
 const { save } = require("./UserService");
 
 const router = express.Router();
 
-const validateUsername = (req, res, next) => {
+/* const validateUsername = (req, res, next) => {
   const user = req.body;
   const { username, email, password } = req.body;
   if (username === null) {
@@ -24,14 +25,20 @@ const validateEmail = (req, res, next) => {
   next();
 };
 
+*/
+
 router.post(
   "/api/1.0/users",
-  validateUsername,
-  validateEmail,
+  check("username").notEmpty().withMessage("Username cannot be null"),
+  check("email").notEmpty().withMessage("E-mail cannot be null"),
   async (req, res) => {
-    if (req.validationErrors) {
-      const response = { validationErrors: { ...req.validationErrors } };
-      return res.status(400).send(response);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const validationErrors = {};
+      errors.array().forEach((error) => {
+        validationErrors[error.path] = error.msg;
+      });
+      return res.status(400).send({ validationErrors: validationErrors });
     }
     await save(req.body);
     return res.send({
